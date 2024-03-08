@@ -1,27 +1,9 @@
 import sys, pygame
 import random
 
-#loading symbols
-def load_symbols():
-    #empty 
-    global empty0, empty1, empty2, empty3, empty4, empty5, empty6, empty7, empty8
-    empty0 = empty_image.get_rect()
-    empty1 = empty_image.get_rect()
-    empty2 = empty_image.get_rect()
-    empty3 = empty_image.get_rect()
-    empty4 = empty_image.get_rect()
-    empty5 = empty_image.get_rect()
-    empty6 = empty_image.get_rect()
-    empty7 = empty_image.get_rect()
-    empty8 = empty_image.get_rect()
-    #X
 
 
-    #O
 
-def position_symbols():
-    for i in range(9):
-        vars()['empty' + str(i)].centrex,  vars()['empty' + str(i)].centrey = position[i]
 
 
 
@@ -63,10 +45,16 @@ play_button_rect.centerx, play_button_rect.centery = (width/2), (height/2)
 
 #loading empty image
 empty_image = pygame.image.load('assets/empty.png')
+#loading x image
+x_image = pygame.image.load('assets/x.png')
+#loading x image
+o_image = pygame.image.load('assets/o.png')
 
 
 
-load_symbols()
+
+
+
 
 
 # reference for symbols
@@ -75,23 +63,89 @@ x = 1
 o = 2
 
 # actual position of the game
-grid  = [[empty, empty, empty], 
-         [empty, empty, empty], 
-         [empty, empty, empty]]
+grid  = [empty, o, x, 
+         empty, x, empty, 
+         x, empty, empty]
 
-position = [(100, 100), (0, 0), (0, 0),
-            (0, 0), (0, 0), (0, 0),
-            (0, 0), (0, 0), (0, 0)]
+position = [(454, 250), (585, 250), (715, 250),
+            (454, 385), (585, 385), (715, 385),
+            (454, 520), (585, 520), (715, 520)]
+
+
+#LOADING SYMBOLS:-
+#empty     
+empty0 = empty_image.get_rect()
+empty1 = empty_image.get_rect()
+empty2 = empty_image.get_rect()
+empty3 = empty_image.get_rect()
+empty4 = empty_image.get_rect()
+empty5 = empty_image.get_rect()
+empty6 = empty_image.get_rect()
+empty7 = empty_image.get_rect()
+empty8 = empty_image.get_rect()
+#X
+x0 = x_image.get_rect()
+x1 = x_image.get_rect()
+x2 = x_image.get_rect()
+x3 = x_image.get_rect()
+x4 = x_image.get_rect()
+x5 = x_image.get_rect()
+x6 = x_image.get_rect()
+x7 = x_image.get_rect()
+x8 = x_image.get_rect()
+#O
+o0 = o_image.get_rect()
+o1 = o_image.get_rect()
+o2 = o_image.get_rect()
+o3 = o_image.get_rect()
+o4 = o_image.get_rect()
+o5 = o_image.get_rect()
+o6 = o_image.get_rect()
+o7 = o_image.get_rect()
+o8 = o_image.get_rect()
 
 
 
-position_symbols()
+
+
+#POSITIONING SYMBOLS
+for i in range(9):
+    vars()['empty' + str(i)].x,  vars()['empty' + str(i)].y = position[i]
+    vars()['x' + str(i)].x,  vars()['x' + str(i)].y = position[i]
+    vars()['o' + str(i)].x,  vars()['o' + str(i)].y = position[i]
+
+
+
+
+
+
+
+
+
 #generating symbol for player
 player = random.randint(1, 2)
 if player == 1:
-    player = 'x'
+    player = x
 if player == 2:
-    player = 'o'
+    player = o
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 while running:
@@ -128,7 +182,7 @@ while running:
                     # waits for 200ms and changes state to actual game
                     pygame.time.wait(200)
                     state = 'game'
-
+                
 
 
     # THE ACTUAL GAME
@@ -143,8 +197,24 @@ while running:
                 running = False
     
 
+        #rendering symbols:
+        for i in range(9):
+            if grid[i] == empty:
+                screen.blit(empty_image, vars()['empty' + str(i)])
+            if grid[i] == x:
+                screen.blit(x_image, vars()['x' + str(i)])
+            if grid[i] == o:
+                screen.blit(o_image, vars()['o' + str(i)])
+        
 
-    screen.blit(empty_image, empty0)
+
+        #clicking empty to register clicks
+        for i in range(9):
+            if vars()['empty' + str(i)].collidepoint(pygame.mouse.get_pos()):
+                    if event.type == pygame.MOUSEBUTTONUP:
+                        # waits for 200ms and changes state to actual game
+                        pygame.time.wait(200)
+                        grid[i] = player
 
 
     # update the game's frame
