@@ -23,9 +23,13 @@ screencolor = 108, 105, 141
 # state of the game, i.e. if the game started or not
 state = 'menu'
 
-#loading bg image
-bg = pygame.image.load('assets/bg.png')
-bg_rect = bg.get_rect()
+#loading menu bg image
+bg_menu = pygame.image.load('assets/bg_menu.png')
+bg_menu_rect = bg_menu.get_rect()
+
+#loading game bg image
+bg_game = pygame.image.load('assets/bg_game.png')
+bg_game_rect = bg_game.get_rect()
 
 #loading bg image
 play_button = pygame.image.load('assets/play_button.png')
@@ -37,25 +41,33 @@ play_button_rect.centerx, play_button_rect.centery = (width/2), (height/2)
 
 while running:
     
-    # to quit the game when close button is clicked
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
+    
 
     # fill the screen with a color
     screen.fill(screencolor)
 
+
+    
+
     #WHEN STATE IS MAIN MENU
     if state == 'menu':
         
-        #render bg image
-        screen.blit(bg, bg_rect)
+        #render menu bg image
+        screen.blit(bg_menu, bg_menu_rect)
+
         #render play button
         screen.blit(play_button, play_button_rect)
 
 
-        # runs when user clicks the play button
+        
         for event in pygame.event.get():
+            #to quit the game when use clicks close button
+            if event.type == pygame.QUIT:
+                running = False
+            
+            
+            
+            # runs when user clicks the play button
             if play_button_rect.collidepoint(pygame.mouse.get_pos()):
                 if event.type == pygame.MOUSEBUTTONUP:
                     # waits for 200ms and changes state to actual game
@@ -66,7 +78,14 @@ while running:
 
     # THE ACTUAL GAME
     if state == 'game':
-        x = 1
+        
+        #render game bg image
+        screen.blit(bg_game, bg_game_rect)
+        
+        for event in pygame.event.get():
+            #to quit the game when use clicks close button
+            if event.type == pygame.QUIT:
+                running = False
     
 
 
@@ -78,6 +97,6 @@ while running:
 
 
     # limit framerate to 60fps
-    clock.tick(60)  
+    clock.tick(60)
 
 pygame.quit()
