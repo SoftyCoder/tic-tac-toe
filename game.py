@@ -54,7 +54,7 @@ o_image = pygame.image.load('assets/o.png')
 
 
 
-
+n_moves_played = 0
 
 
 # reference for symbols
@@ -63,9 +63,9 @@ x = 1
 o = 2
 
 # actual position of the game
-grid  = [empty, o, x, 
-         empty, x, empty, 
-         x, empty, empty]
+grid  = [empty, empty, empty, 
+         empty, empty, empty, 
+         empty, empty, empty]
 
 position = [(454, 250), (585, 250), (715, 250),
             (454, 385), (585, 385), (715, 385),
@@ -108,45 +108,20 @@ o8 = o_image.get_rect()
 
 
 
-#POSITIONING SYMBOLS
-for i in range(9):
-    vars()['empty' + str(i)].x,  vars()['empty' + str(i)].y = position[i]
-    vars()['x' + str(i)].x,  vars()['x' + str(i)].y = position[i]
-    vars()['o' + str(i)].x,  vars()['o' + str(i)].y = position[i]
-
-
-
-
-
-
-
 
 
 #generating symbol for player
+"""
 player = random.randint(1, 2)
-if player == 1:
-    player = x
-if player == 2:
-    player = o
+if player == o:
+    computer = x
+if player == x:
+    computer = o
+"""
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+player = x
+computer = o
 
 while running:
     
@@ -187,6 +162,13 @@ while running:
 
     # THE ACTUAL GAME
     if state == 'game':
+
+
+        #POSITIONING SYMBOLS
+        for i in range(9):
+            vars()['empty' + str(i)].x,  vars()['empty' + str(i)].y = position[i]
+            vars()['x' + str(i)].x,  vars()['x' + str(i)].y = position[i]
+            vars()['o' + str(i)].x,  vars()['o' + str(i)].y = position[i]
         
         #render game bg image (with grid)
         screen.blit(bg_game, bg_game_rect)
@@ -207,14 +189,51 @@ while running:
                 screen.blit(o_image, vars()['o' + str(i)])
         
 
-
-        #clicking empty to register clicks
-        for i in range(9):
-            if vars()['empty' + str(i)].collidepoint(pygame.mouse.get_pos()):
+        if player == x:
+            #clicking empty to register clicks + randomly generating move
+            for i in range(9):
+                if vars()['empty' + str(i)].collidepoint(pygame.mouse.get_pos()):
                     if event.type == pygame.MOUSEBUTTONUP:
-                        # waits for 200ms and changes state to actual game
-                        pygame.time.wait(200)
-                        grid[i] = player
+                        if grid[i] == empty:
+                            # waits for 200ms and register click
+                            pygame.time.wait(200)
+                            grid[i] = player
+                            n_moves_played += 1
+                            if n_moves_played == 9:
+                                break
+                            #generate a random move
+                            while True:
+                                rand = random.randint(0, 8)
+                                if grid[rand] == empty:
+                                    grid[rand] = computer
+                                    n_moves_played += 1
+                                    break
+
+        if player == o:
+            #generate a random move
+            while True:
+                rand = random.randint(0, 8)
+                if grid[rand] == empty:
+                    grid[rand] = computer
+                    n_moves_played += 1
+                    break
+
+            blah = False     
+            while n_moves_played < 9:
+                for i in range(9):
+                    if vars()['empty' + str(i)].collidepoint(pygame.mouse.get_pos()):
+                        if event.type == pygame.MOUSEBUTTONUP:
+                            if grid[i] == empty:
+                                # waits for 200ms and register click
+                                pygame.time.wait(200)
+                                grid[i] = player
+                                n_moves_played += 1
+                                blah = True
+                                break
+                if blah == True:
+                    break
+
+
 
 
     # update the game's frame
