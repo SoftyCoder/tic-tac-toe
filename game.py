@@ -160,6 +160,16 @@ def did_anyone_win():
                 break
         
         i += 3
+
+
+    #diagonal
+    if (grid[0] == grid[4]) and (grid[0]!=0):
+        if grid[4] == grid[8]:
+            won = grid[0]
+    if (grid[2] == grid[4]) and (grid[2]!=0):
+        if grid[4] == grid[6]:
+            won = grid[2]
+            
     return won
             
 
