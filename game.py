@@ -119,9 +119,11 @@ if player == x:
     computer = o
 """
 
-
-player = x
-computer = o
+did_computer_play = False
+did_player_play = True
+did_game_end = False
+player = o
+computer = x
 
 while running:
     
@@ -207,31 +209,44 @@ while running:
                                 if grid[rand] == empty:
                                     grid[rand] = computer
                                     n_moves_played += 1
+                                    pygame.time.wait(200)
                                     break
 
         if player == o:
             #generate a random move
-            while True:
+            while (did_computer_play == False) and (did_player_play == True) and (did_game_end == False):
                 rand = random.randint(0, 8)
                 if grid[rand] == empty:
                     grid[rand] = computer
                     n_moves_played += 1
+                    pygame.display.flip()
+                    pygame.time.wait(200)
+                    did_computer_play = True
+                    did_player_play = False
+                    if n_moves_played == 9:
+                        did_game_end = True
                     break
-
-            blah = False     
-            while n_moves_played < 9:
+            
+            
+            while (did_computer_play == True) and (did_player_play == False) and (did_game_end == False):
                 for i in range(9):
                     if vars()['empty' + str(i)].collidepoint(pygame.mouse.get_pos()):
                         if event.type == pygame.MOUSEBUTTONUP:
                             if grid[i] == empty:
                                 # waits for 200ms and register click
-                                pygame.time.wait(200)
+                                
                                 grid[i] = player
                                 n_moves_played += 1
-                                blah = True
-                                break
-                if blah == True:
-                    break
+                                pygame.display.flip()
+                                
+                                did_computer_play = False
+                                did_player_play = True
+                                pygame.time.wait(200)
+
+
+            
+            
+
 
 
 
