@@ -49,6 +49,8 @@ empty_image = pygame.image.load('assets/empty.png')
 x_image = pygame.image.load('assets/x.png')
 #loading x image
 o_image = pygame.image.load('assets/o.png')
+#load player O image
+player_o_bg = pygame.image.load('assets/player_o_bg.png')
 
 
 
@@ -111,19 +113,20 @@ o8 = o_image.get_rect()
 
 
 #generating symbol for player
-"""
+
 player = random.randint(1, 2)
 if player == o:
     computer = x
 if player == x:
     computer = o
-"""
+
 
 did_computer_play = False
 did_player_play = True
 did_game_end = False
-player = o
-computer = x
+
+
+player_o_bg_rect = player_o_bg.get_rect()
 
 while running:
     
@@ -198,9 +201,10 @@ while running:
                     if event.type == pygame.MOUSEBUTTONUP:
                         if grid[i] == empty:
                             # waits for 200ms and register click
-                            pygame.time.wait(200)
+                            
                             grid[i] = player
                             n_moves_played += 1
+                            pygame.time.wait(200)
                             if n_moves_played == 9:
                                 break
                             #generate a random move
@@ -209,40 +213,30 @@ while running:
                                 if grid[rand] == empty:
                                     grid[rand] = computer
                                     n_moves_played += 1
-                                    pygame.time.wait(200)
+                                    
                                     break
 
         if player == o:
+            
+            """
             #generate a random move
-            while (did_computer_play == False) and (did_player_play == True) and (did_game_end == False):
-                rand = random.randint(0, 8)
-                if grid[rand] == empty:
-                    grid[rand] = computer
-                    n_moves_played += 1
-                    pygame.display.flip()
-                    pygame.time.wait(200)
-                    did_computer_play = True
-                    did_player_play = False
-                    if n_moves_played == 9:
-                        did_game_end = True
-                    break
+            if did_game_end == False:
+                while (did_computer_play == False) and (did_player_play == True):
+                    rand = random.randint(0, 8)
+                    if grid[rand] == empty:
+                        grid[rand] = computer
+                        n_moves_played += 1
+                        
+                        pygame.time.wait(200)
+                        did_computer_play = True
+                        did_player_play = False
+                        pygame.display.flip()
+                        if n_moves_played == 9:
+                            did_game_end = True
+                        break
+            """
             
-            
-            while (did_computer_play == True) and (did_player_play == False) and (did_game_end == False):
-                for i in range(9):
-                    if vars()['empty' + str(i)].collidepoint(pygame.mouse.get_pos()):
-                        if event.type == pygame.MOUSEBUTTONUP:
-                            if grid[i] == empty:
-                                # waits for 200ms and register click
-                                
-                                grid[i] = player
-                                n_moves_played += 1
-                                pygame.display.flip()
-                                
-                                did_computer_play = False
-                                did_player_play = True
-                                pygame.time.wait(200)
-
+            screen.blit(player_o_bg, player_o_bg_rect)
 
             
             
