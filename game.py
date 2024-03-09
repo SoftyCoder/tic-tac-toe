@@ -286,7 +286,8 @@ while running:
         screen.blit(computer_won_bg, computer_won_bg_rect)
         computer_won_bg_rect.x, computer_won_bg_rect.y = 0, 0
         pygame.display.flip()
-        pygame.time.wait(1000)
+        pygame.time.wait(2000)
+        pygame.quit()
             
 
 
