@@ -51,7 +51,10 @@ x_image = pygame.image.load('assets/x.png')
 o_image = pygame.image.load('assets/o.png')
 #load player O image
 player_o_bg = pygame.image.load('assets/player_o_bg.png')
-
+#player won
+player_won_bg = pygame.image.load('assets/player_won_bg.png')
+#computer won
+computer_won_bg = pygame.image.load('assets/computer_won_bg.png')
 
 
 
@@ -127,6 +130,36 @@ did_game_end = False
 
 
 player_o_bg_rect = player_o_bg.get_rect()
+player_won_bg_rect = player_won_bg.get_rect()
+computer_won_bg_rect = computer_won_bg.get_rect()
+
+who_won = 'none'
+
+def did_anyone_win():
+    won = False
+    #vertical
+    for j in range(3):
+        if (grid[j] == grid[j+3]) and (grid[j]!=0):
+            if grid[j+3] == grid[j+6]:
+                won = True
+                who_won = grid[j]
+                break
+            
+    i = 0
+    while i <= 6:
+        if (grid[i] == grid[i+1]) and (grid[i]!=0):
+            if grid[i+1] == grid[i+2]:
+                won = True
+                who_won = grid[i]
+                break
+        
+        i += 3
+    return won
+            
+
+
+
+
 
 while running:
     
@@ -167,7 +200,7 @@ while running:
 
     # THE ACTUAL GAME
     if state == 'game':
-
+        
 
         #POSITIONING SYMBOLS
         for i in range(9):
@@ -196,6 +229,13 @@ while running:
 
         if player == x:
             #clicking empty to register clicks + randomly generating move
+            if did_anyone_win() == True:
+                
+                if who_won == player:
+                    state == 'player_won'
+                if who_won == computer:
+                    state = 'computer_won'
+                
             for i in range(9):
                 if vars()['empty' + str(i)].collidepoint(pygame.mouse.get_pos()):
                     if event.type == pygame.MOUSEBUTTONUP:
@@ -238,7 +278,10 @@ while running:
             
             screen.blit(player_o_bg, player_o_bg_rect)
 
-            
+    if state == 'player_won':
+        screen.blit(player_won_bg, player_won_bg_rect)
+    if state == 'computer_won':
+        screen.blit(computer_won_bg, computer_won_bg_rect)
             
 
 
