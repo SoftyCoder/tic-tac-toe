@@ -136,21 +136,19 @@ computer_won_bg_rect = computer_won_bg.get_rect()
 who_won = 'none'
 
 def did_anyone_win():
-    won = False
+    won = 0
     #vertical
     for j in range(3):
         if (grid[j] == grid[j+3]) and (grid[j]!=0):
             if grid[j+3] == grid[j+6]:
-                won = True
-                who_won = grid[j]
+                won = grid[j]
                 break
             
     i = 0
     while i <= 6:
         if (grid[i] == grid[i+1]) and (grid[i]!=0):
             if grid[i+1] == grid[i+2]:
-                won = True
-                who_won = grid[i]
+                won = grid[i]
                 break
         
         i += 3
@@ -229,12 +227,12 @@ while running:
 
         if player == x:
             #clicking empty to register clicks + randomly generating move
-            if did_anyone_win() == True:
+            if did_anyone_win() == player:
+                state = 'player_won'
+            if did_anyone_win() == computer:
+                state = 'computer_won'
                 
-                if who_won == player:
-                    state == 'player_won'
-                if who_won == computer:
-                    state = 'computer_won'
+                
                 
             for i in range(9):
                 if vars()['empty' + str(i)].collidepoint(pygame.mouse.get_pos()):
@@ -280,8 +278,16 @@ while running:
 
     if state == 'player_won':
         screen.blit(player_won_bg, player_won_bg_rect)
+        player_won_bg_rect.x, player_won_bg_rect.y = 0, 0
+        pygame.display.flip()
+        pygame.time.wait(2000)
+        pygame.quit()
     if state == 'computer_won':
         screen.blit(computer_won_bg, computer_won_bg_rect)
+        computer_won_bg_rect.x, computer_won_bg_rect.y = 0, 0
+        pygame.display.flip()
+        pygame.time.wait(2000)
+        pygame.quit()
             
 
 
