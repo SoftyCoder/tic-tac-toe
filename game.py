@@ -29,6 +29,14 @@ state = 'menu'
 
 
 
+#music and sounds
+start_sound = pygame.mixer.Sound('assets/start.wav')
+click_sound = pygame.mixer.Sound('assets/click.wav')
+player_win_sound = pygame.mixer.Sound('assets/player_win.wav')
+computer_win_sound = pygame.mixer.Sound('assets/computer_win.wav')
+
+
+
 #loading menu bg image
 bg_menu = pygame.image.load('assets/bg_menu.png')
 bg_menu_rect = bg_menu.get_rect()
@@ -191,6 +199,7 @@ while running:
             if play_button_rect.collidepoint(pygame.mouse.get_pos()):
                 if event.type == pygame.MOUSEBUTTONUP:
                     # waits for 200ms and changes state to actual game
+                    pygame.mixer.Sound.play(start_sound)
                     pygame.time.wait(200)
                     state = 'game'
                 
@@ -229,8 +238,10 @@ while running:
             #clicking empty to register clicks + randomly generating move
             if did_anyone_win() == player:
                 state = 'player_won'
+                pygame.mixer.Sound.play(player_win_sound)
             if did_anyone_win() == computer:
                 state = 'computer_won'
+                pygame.mixer.Sound.play(computer_win_sound)
                 
                 
                 
@@ -239,7 +250,7 @@ while running:
                     if event.type == pygame.MOUSEBUTTONUP:
                         if grid[i] == empty:
                             # waits for 200ms and register click
-                            
+                            pygame.mixer.Sound.play(click_sound)
                             grid[i] = player
                             n_moves_played += 1
                             pygame.time.wait(200)
@@ -280,13 +291,14 @@ while running:
         screen.blit(player_won_bg, player_won_bg_rect)
         player_won_bg_rect.x, player_won_bg_rect.y = 0, 0
         pygame.display.flip()
-        pygame.time.wait(2000)
+        pygame.time.wait(3500)
         pygame.quit()
     if state == 'computer_won':
+        
         screen.blit(computer_won_bg, computer_won_bg_rect)
         computer_won_bg_rect.x, computer_won_bg_rect.y = 0, 0
         pygame.display.flip()
-        pygame.time.wait(2000)
+        pygame.time.wait(4000)
         pygame.quit()
             
 
