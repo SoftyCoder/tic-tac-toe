@@ -76,9 +76,11 @@ x = 1
 o = 2
 
 # actual position of the game
+
 grid  = [empty, empty, empty, 
          empty, empty, empty, 
          empty, empty, empty]
+
 
 position = [(454, 250), (585, 250), (715, 250),
             (454, 385), (585, 385), (715, 385),
@@ -125,11 +127,13 @@ o8 = o_image.get_rect()
 
 #generating symbol for player
 
+
 player = random.randint(1, 2)
 if player == o:
     computer = x
 if player == x:
     computer = o
+
 
 
 did_computer_play = False
@@ -189,7 +193,10 @@ while running:
 
     #WHEN STATE IS MAIN MENU
     if state == 'menu':
-        
+        n_moves_played = 0
+        grid  = [empty, empty, empty, 
+                empty, empty, empty, 
+                empty, empty, empty]
         #render menu bg image
         screen.blit(bg_menu, bg_menu_rect)
 
@@ -252,6 +259,8 @@ while running:
             if did_anyone_win() == computer:
                 state = 'computer_won'
                 pygame.mixer.Sound.play(computer_win_sound)
+            if (n_moves_played == 9) and (did_anyone_win() == 0):
+                state = 'menu'
                 
                 
                 
@@ -298,18 +307,22 @@ while running:
             screen.blit(player_o_bg, player_o_bg_rect)
 
     if state == 'player_won':
+        
+
         screen.blit(player_won_bg, player_won_bg_rect)
         player_won_bg_rect.x, player_won_bg_rect.y = 0, 0
         pygame.display.flip()
         pygame.time.wait(3500)
-        pygame.quit()
+        state = 'menu'
+
+
     if state == 'computer_won':
         
         screen.blit(computer_won_bg, computer_won_bg_rect)
         computer_won_bg_rect.x, computer_won_bg_rect.y = 0, 0
         pygame.display.flip()
         pygame.time.wait(4000)
-        pygame.quit()
+        state = 'menu'
             
 
 
