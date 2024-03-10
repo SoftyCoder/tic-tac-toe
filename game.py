@@ -223,7 +223,7 @@ while running:
 
 
     # THE ACTUAL GAME
-    if state == 'game':
+    elif state == 'game':
         
 
         #POSITIONING SYMBOLS
@@ -245,9 +245,9 @@ while running:
         for i in range(9):
             if grid[i] == empty:
                 screen.blit(empty_image, vars()['empty' + str(i)])
-            if grid[i] == x:
+            elif grid[i] == x:
                 screen.blit(x_image, vars()['x' + str(i)])
-            if grid[i] == o:
+            elif grid[i] == o:
                 screen.blit(o_image, vars()['o' + str(i)])
         
 
@@ -256,10 +256,10 @@ while running:
             if did_anyone_win() == player:
                 state = 'player_won'
                 pygame.mixer.Sound.play(player_win_sound)
-            if did_anyone_win() == computer:
+            elif did_anyone_win() == computer:
                 state = 'computer_won'
                 pygame.mixer.Sound.play(computer_win_sound)
-            if (n_moves_played == 9) and (did_anyone_win() == 0):
+            elif n_moves_played == 9: #TO CHECK DRAW
                 state = 'menu'
                 
                 
@@ -284,7 +284,7 @@ while running:
                                     
                                     break
 
-        if player == o:
+        elif player == o:
             
             """
             #generate a random move
@@ -306,7 +306,7 @@ while running:
             
             screen.blit(player_o_bg, player_o_bg_rect)
 
-    if state == 'player_won':
+    elif state == 'player_won':
         
 
         screen.blit(player_won_bg, player_won_bg_rect)
@@ -316,7 +316,7 @@ while running:
         state = 'menu'
 
 
-    if state == 'computer_won':
+    elif state == 'computer_won':
         
         screen.blit(computer_won_bg, computer_won_bg_rect)
         computer_won_bg_rect.x, computer_won_bg_rect.y = 0, 0
