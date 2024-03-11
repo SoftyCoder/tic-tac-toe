@@ -240,6 +240,7 @@ while running:
                     # waits for 200ms and changes state to actual game
                     pygame.mixer.Sound.play(start_sound)
                     is_timer_first_time = True
+                    is_gameover_timer_first_time = True
                     pygame.time.set_timer(pygame.USEREVENT, 1000)
                     #generating symbol for player
                     player = random.randint(1, 2)
