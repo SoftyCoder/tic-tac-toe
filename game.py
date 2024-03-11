@@ -30,7 +30,7 @@ state = 'menu'
 
 #FONTS:
 winstreak_font = pygame.font.Font('assets/comic.ttf', 42)
-
+player_info_font = pygame.font.Font('assets/comic.ttf', 42)
 
 
 #music and sounds
@@ -138,7 +138,7 @@ if player == x:
     computer = o
 
 
-did_generate_random = False
+is_timer_first_time = True
 
 did_computer_play = False
 did_player_play = True
@@ -188,8 +188,18 @@ current_winstreak = 0
 
 while running:
     
-    
+    #winstreak
     winstreak_text = winstreak_font.render('Winstreak = ' + str(current_winstreak), True, (241, 242, 238))
+    
+
+    player_info = 'idk smthn random'
+    #Player info
+    if player == o:
+        player_info = 'O'
+    elif player == x:
+        player_info = 'X'
+    
+    player_info_text = player_info_font.render('Player = ' + player_info, True, (241, 242, 238))
     # fill the screen with a color
     screen.fill(screencolor)
 
@@ -227,7 +237,14 @@ while running:
                 if event.type == pygame.MOUSEBUTTONUP:
                     # waits for 200ms and changes state to actual game
                     pygame.mixer.Sound.play(start_sound)
-                    pygame.time.wait(700)
+                    is_timer_first_time = True
+                    pygame.time.set_timer(pygame.USEREVENT, 1000)
+                    #generating symbol for player
+                    player = random.randint(1, 2)
+                    if player == o:
+                        computer = x
+                    if player == x:
+                        computer = o
                     state = 'game'
         
                 
@@ -236,7 +253,8 @@ while running:
     # THE ACTUAL GAME
     elif state == 'game':
         
-
+        
+       
         #POSITIONING SYMBOLS
         for i in range(9):
             vars()['empty' + str(i)].x,  vars()['empty' + str(i)].y = position[i]
@@ -247,11 +265,14 @@ while running:
         screen.blit(bg_game, bg_game_rect)
         #render winstreaks
         screen.blit(winstreak_text, (70, 200))
+        screen.blit(player_info_text, (70, 250))
         
         for event in pygame.event.get():
             #to quit the game when use clicks close button
             if event.type == pygame.QUIT:
                 running = False
+            if event.type == pygame.USEREVENT:
+                is_timer_first_time = False
     
 
         #rendering symbols:
@@ -265,137 +286,138 @@ while running:
         pygame.display.update()
         
         
+        if is_timer_first_time == False:
+            if player == x:
+                
+                #clicking empty to register clicks + randomly generating move
+                if did_anyone_win() == player:
+                    state = 'player_won'
+                    pygame.mixer.Sound.play(player_win_sound)
+                elif did_anyone_win() == computer:
+                    state = 'computer_won'
+                    pygame.mixer.Sound.play(computer_win_sound)
+                elif n_moves_played == 9: #TO CHECK DRAW
+                    state = 'menu'
+                    
+                    
+                    
+                for i in range(9):
+                    if vars()['empty' + str(i)].collidepoint(pygame.mouse.get_pos()):
+                        if event.type == pygame.MOUSEBUTTONUP:
+                            if grid[i] == empty:
+                                # waits for 200ms and register click
+                                pygame.mixer.Sound.play(click_sound)
+                                grid[i] = player
+                                n_moves_played += 1
+                                pygame.time.wait(200)
+                                if n_moves_played == 9:
+                                    break
+                                #rendering symbols:
+                                for i in range(9):
+                                    if grid[i] == empty:
+                                        screen.blit(empty_image, vars()['empty' + str(i)])
+                                    elif grid[i] == x:
+                                        screen.blit(x_image, vars()['x' + str(i)])
+                                    elif grid[i] == o:
+                                        screen.blit(o_image, vars()['o' + str(i)])    
+                                pygame.display.update()
+                                pygame.time.wait(200)
+                                
+                                
+                                if (n_moves_played < 9) and (did_anyone_win() == 0):
 
-        if player == x:
-            
-            #clicking empty to register clicks + randomly generating move
-            if did_anyone_win() == player:
-                state = 'player_won'
-                pygame.mixer.Sound.play(player_win_sound)
-            elif did_anyone_win() == computer:
-                state = 'computer_won'
-                pygame.mixer.Sound.play(computer_win_sound)
-            elif n_moves_played == 9: #TO CHECK DRAW
-                state = 'menu'
+                                    #generate a random move
+                                    while True:
+                                        rand = random.randint(0, 8)
+                                        if grid[rand] == empty:
+                                            grid[rand] = computer
+                                            n_moves_played += 1
+                                            
+                                            break
+                                #rendering symbols:
+                                for i in range(9):
+                                    if grid[i] == empty:
+                                        screen.blit(empty_image, vars()['empty' + str(i)])
+                                    elif grid[i] == x:
+                                        screen.blit(x_image, vars()['x' + str(i)])
+                                    elif grid[i] == o:
+                                        screen.blit(o_image, vars()['o' + str(i)])    
+                                pygame.display.update()
+                                pygame.time.wait(200)
+            elif player == o:
                 
                 
-                
-            for i in range(9):
-                if vars()['empty' + str(i)].collidepoint(pygame.mouse.get_pos()):
-                    if event.type == pygame.MOUSEBUTTONUP:
-                        if grid[i] == empty:
-                            # waits for 200ms and register click
-                            pygame.mixer.Sound.play(click_sound)
-                            grid[i] = player
-                            n_moves_played += 1
-                            pygame.time.wait(200)
-                            if n_moves_played == 9:
-                                break
-                            #rendering symbols:
-                            for i in range(9):
-                                if grid[i] == empty:
-                                    screen.blit(empty_image, vars()['empty' + str(i)])
-                                elif grid[i] == x:
-                                    screen.blit(x_image, vars()['x' + str(i)])
-                                elif grid[i] == o:
-                                    screen.blit(o_image, vars()['o' + str(i)])    
-                            pygame.display.update()
-                            pygame.time.wait(200)
-                            
-                            
-                            if (n_moves_played < 9) and (did_anyone_win() == 0):
-
-                                #generate a random move
-                                while True:
-                                    rand = random.randint(0, 8)
-                                    if grid[rand] == empty:
-                                        grid[rand] = computer
-                                        n_moves_played += 1
-                                        
-                                        break
-                            #rendering symbols:
-                            for i in range(9):
-                                if grid[i] == empty:
-                                    screen.blit(empty_image, vars()['empty' + str(i)])
-                                elif grid[i] == x:
-                                    screen.blit(x_image, vars()['x' + str(i)])
-                                elif grid[i] == o:
-                                    screen.blit(o_image, vars()['o' + str(i)])    
-                            pygame.display.update()
-                            pygame.time.wait(200)
-        elif player == o:
-            
-            
-            #generate a random move:
-            waiting = True
-            while waiting:
-                rand = random.randint(0, 8)
-
-                if grid[rand] == empty:
-                    grid[rand] = computer
-                    n_moves_played += 1
-                    break
-            #rendering symbols:
-            for i in range(9):
-                if grid[i] == empty:
-                    screen.blit(empty_image, vars()['empty' + str(i)])
-                elif grid[i] == x:
-                    screen.blit(x_image, vars()['x' + str(i)])
-                elif grid[i] == o:
-                    screen.blit(o_image, vars()['o' + str(i)])
-            
-            pygame.display.update()
-            pygame.time.wait(200)
-            #clicking empty to register clicks + randomly generating move
-            if did_anyone_win() == player:
-                state = 'player_won'
-                pygame.mixer.Sound.play(player_win_sound)
-            elif did_anyone_win() == computer:
-                state = 'computer_won'
-                pygame.mixer.Sound.play(computer_win_sound)
-            elif n_moves_played == 9: #TO CHECK DRAW
-                state = 'menu'
-            
-            if (n_moves_played < 9) and (did_anyone_win() == 0):
-
+                #generate a random move:
                 waiting = True
                 while waiting:
-                    for event in pygame.event.get():
-                        #to quit the game when use clicks close button
-                        if event.type == pygame.QUIT:
-                            pygame.quit()
-                    for i in range(9):
-                        if vars()['empty' + str(i)].collidepoint(pygame.mouse.get_pos()):
-                            if event.type == pygame.MOUSEBUTTONUP:
-                                if grid[i] == empty:
-                                    # waits for 200ms and register click
-                                    pygame.mixer.Sound.play(click_sound)
-                                    grid[i] = player
-                                    n_moves_played += 1
-                                    pygame.time.wait(200)
-                                    waiting = False
-                                    #rendering symbols:
-                                    for i in range(9):
-                                        if grid[i] == empty:
-                                            screen.blit(empty_image, vars()['empty' + str(i)])
-                                        elif grid[i] == x:
-                                            screen.blit(x_image, vars()['x' + str(i)])
-                                        elif grid[i] == o:
-                                            screen.blit(o_image, vars()['o' + str(i)])
-                                    pygame.display.update()
-                                    pygame.time.wait(200)
-                    if waiting == False:
+                    rand = random.randint(0, 8)
+
+                    if grid[rand] == empty:
+                        grid[rand] = computer
+                        n_moves_played += 1
                         break
-            
-            #clicking empty to register clicks + randomly generating move
-            if did_anyone_win() == player:
-                state = 'player_won'
-                pygame.mixer.Sound.play(player_win_sound)
-            elif did_anyone_win() == computer:
-                state = 'computer_won'
-                pygame.mixer.Sound.play(computer_win_sound)
-            elif n_moves_played == 9: #TO CHECK DRAW
-                state = 'menu'                       
+                #rendering symbols:
+                for i in range(9):
+                    if grid[i] == empty:
+                        screen.blit(empty_image, vars()['empty' + str(i)])
+                    elif grid[i] == x:
+                        screen.blit(x_image, vars()['x' + str(i)])
+                    elif grid[i] == o:
+                        screen.blit(o_image, vars()['o' + str(i)])
+                
+                pygame.display.update()
+                pygame.time.wait(200)
+                
+                #clicking empty to register clicks + randomly generating move
+                if did_anyone_win() == player:
+                    state = 'player_won'
+                    pygame.mixer.Sound.play(player_win_sound)
+                elif did_anyone_win() == computer:
+                    state = 'computer_won'
+                    pygame.mixer.Sound.play(computer_win_sound)
+                elif n_moves_played == 9: #TO CHECK DRAW
+                    state = 'menu'
+                
+                if (n_moves_played < 9) and (did_anyone_win() == 0):
+
+                    waiting = True
+                    while waiting:
+                        for event in pygame.event.get():
+                            #to quit the game when use clicks close button
+                            if event.type == pygame.QUIT:
+                                pygame.quit()
+                        for i in range(9):
+                            if vars()['empty' + str(i)].collidepoint(pygame.mouse.get_pos()):
+                                if event.type == pygame.MOUSEBUTTONUP:
+                                    if grid[i] == empty:
+                                        # waits for 200ms and register click
+                                        pygame.mixer.Sound.play(click_sound)
+                                        grid[i] = player
+                                        n_moves_played += 1
+                                        pygame.time.wait(200)
+                                        waiting = False
+                                        #rendering symbols:
+                                        for i in range(9):
+                                            if grid[i] == empty:
+                                                screen.blit(empty_image, vars()['empty' + str(i)])
+                                            elif grid[i] == x:
+                                                screen.blit(x_image, vars()['x' + str(i)])
+                                            elif grid[i] == o:
+                                                screen.blit(o_image, vars()['o' + str(i)])
+                                        pygame.display.update()
+                                        pygame.time.wait(200)
+                        if waiting == False:
+                            break
+                
+                #clicking empty to register clicks + randomly generating move
+                if did_anyone_win() == player:
+                    state = 'player_won'
+                    pygame.mixer.Sound.play(player_win_sound)
+                elif did_anyone_win() == computer:
+                    state = 'computer_won'
+                    pygame.mixer.Sound.play(computer_win_sound)
+                elif n_moves_played == 9: #TO CHECK DRAW
+                    state = 'menu'                       
 
             
 
@@ -423,12 +445,7 @@ while running:
         #unpause music when going to menu
         pygame.mixer.music.unpause()
 
-        #generating symbol for player
-        player = random.randint(1, 2)
-        if player == o:
-            computer = x
-        if player == x:
-            computer = o
+        
 
 
     elif state == 'computer_won':
@@ -455,12 +472,7 @@ while running:
 
         #unpause music when going to menu
         pygame.mixer.music.unpause()
-        #generating symbol for player
-        player = random.randint(1, 2)
-        if player == o:
-            computer = x
-        if player == x:
-            computer = o
+        
 
 
 
