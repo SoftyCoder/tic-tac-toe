@@ -198,6 +198,7 @@ while running:
 
     #WHEN STATE IS MAIN MENU
     if state == 'menu':
+        
         blah = True
         n_moves_played = 0
         grid  = [empty, empty, empty, 
@@ -226,7 +227,7 @@ while running:
                 if event.type == pygame.MOUSEBUTTONUP:
                     # waits for 200ms and changes state to actual game
                     pygame.mixer.Sound.play(start_sound)
-                    pygame.time.wait(200)
+                    pygame.time.wait(500)
                     state = 'game'
         
                 
@@ -263,8 +264,10 @@ while running:
                 screen.blit(o_image, vars()['o' + str(i)])
         pygame.display.update()
         
+        
 
         if player == x:
+            
             #clicking empty to register clicks + randomly generating move
             if did_anyone_win() == player:
                 state = 'player_won'
