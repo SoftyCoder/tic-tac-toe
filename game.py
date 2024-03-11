@@ -10,6 +10,7 @@ import random
 
 
 pygame.init()
+
 # window manipulation
 width = 1280
 height = 720
@@ -35,6 +36,8 @@ click_sound = pygame.mixer.Sound('assets/click.wav')
 player_win_sound = pygame.mixer.Sound('assets/player_win.wav')
 computer_win_sound = pygame.mixer.Sound('assets/computer_win.wav')
 
+pygame.mixer.music.load('assets/music_peach.mp3')
+pygame.mixer.music.play(-1)
 
 
 #loading menu bg image
@@ -308,21 +311,23 @@ while running:
 
     elif state == 'player_won':
         
-
+        pygame.mixer.music.pause()
         screen.blit(player_won_bg, player_won_bg_rect)
         player_won_bg_rect.x, player_won_bg_rect.y = 0, 0
         pygame.display.flip()
         pygame.time.wait(3500)
         state = 'menu'
+        pygame.mixer.music.unpause()
 
 
     elif state == 'computer_won':
-        
+        pygame.mixer.music.unpause()
         screen.blit(computer_won_bg, computer_won_bg_rect)
         computer_won_bg_rect.x, computer_won_bg_rect.y = 0, 0
         pygame.display.flip()
         pygame.time.wait(4000)
         state = 'menu'
+        pygame.mixer.music.unpause()
             
 
 
