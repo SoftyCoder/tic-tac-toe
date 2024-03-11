@@ -28,6 +28,9 @@ screencolor = 108, 105, 141
 # state of the game, i.e. if the game started or not
 state = 'menu'
 
+#FONTS:
+winstreak_font = pygame.font.Font('assets/comic/ttf')
+
 
 
 #music and sounds
@@ -310,23 +313,36 @@ while running:
             screen.blit(player_o_bg, player_o_bg_rect)
 
     elif state == 'player_won':
-        
+        #pause music when computer win
         pygame.mixer.music.pause()
+
+        #display player won screen
         screen.blit(player_won_bg, player_won_bg_rect)
         player_won_bg_rect.x, player_won_bg_rect.y = 0, 0
         pygame.display.flip()
         pygame.time.wait(3500)
+
+        #change state to menu
         state = 'menu'
+
+        #unpause music when going to menu
         pygame.mixer.music.unpause()
 
 
     elif state == 'computer_won':
-        pygame.mixer.music.unpause()
+        #pause music when computer win
+        pygame.mixer.music.pause()
+
+        #display computer won screen
         screen.blit(computer_won_bg, computer_won_bg_rect)
         computer_won_bg_rect.x, computer_won_bg_rect.y = 0, 0
         pygame.display.flip()
         pygame.time.wait(4000)
+
+        #change state to menu
         state = 'menu'
+
+        #unpause music when going to menu
         pygame.mixer.music.unpause()
             
 
