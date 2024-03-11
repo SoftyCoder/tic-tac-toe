@@ -139,6 +139,8 @@ if player == x:
 
 
 is_timer_first_time = True
+is_gameover_timer_first_time = True
+
 
 did_computer_play = False
 did_player_play = True
@@ -209,7 +211,7 @@ while running:
     #WHEN STATE IS MAIN MENU
     if state == 'menu':
         
-        blah = True
+        
         n_moves_played = 0
         grid  = [empty, empty, empty, 
                 empty, empty, empty, 
@@ -292,9 +294,11 @@ while running:
                 #clicking empty to register clicks + randomly generating move
                 if did_anyone_win() == player:
                     state = 'player_won'
+                    pygame.time.set_timer(pygame.USEREVENT, 3500)
                     pygame.mixer.Sound.play(player_win_sound)
                 elif did_anyone_win() == computer:
                     state = 'computer_won'
+                    pygame.time.set_timer(pygame.USEREVENT, 3500)
                     pygame.mixer.Sound.play(computer_win_sound)
                 elif n_moves_played == 9: #TO CHECK DRAW
                     state = 'menu'
@@ -371,9 +375,11 @@ while running:
                 #clicking empty to register clicks + randomly generating move
                 if did_anyone_win() == player:
                     state = 'player_won'
+                    pygame.time.set_timer(pygame.USEREVENT, 3500)
                     pygame.mixer.Sound.play(player_win_sound)
                 elif did_anyone_win() == computer:
                     state = 'computer_won'
+                    pygame.time.set_timer(pygame.USEREVENT, 3500)
                     pygame.mixer.Sound.play(computer_win_sound)
                 elif n_moves_played == 9: #TO CHECK DRAW
                     state = 'menu'
@@ -412,9 +418,11 @@ while running:
                 #clicking empty to register clicks + randomly generating move
                 if did_anyone_win() == player:
                     state = 'player_won'
+                    pygame.time.set_timer(pygame.USEREVENT, 3500)
                     pygame.mixer.Sound.play(player_win_sound)
                 elif did_anyone_win() == computer:
                     state = 'computer_won'
+                    pygame.time.set_timer(pygame.USEREVENT, 3500)
                     pygame.mixer.Sound.play(computer_win_sound)
                 elif n_moves_played == 9: #TO CHECK DRAW
                     state = 'menu'                       
@@ -422,10 +430,15 @@ while running:
             
 
     elif state == 'player_won':
+
+        for event in pygame.event.get():
+            #to quit the game when use clicks close button
+            if event.type == pygame.QUIT:
+                running = False
+            if event.type == pygame.USEREVENT:
+                is_gameover_timer_first_time = False
         
-        #increase winstreak by 1
-        current_winstreak = current_winstreak + 1
-        winstreak_text = winstreak_font.render('Winstreak = ' + str(current_winstreak), True, (241, 242, 238))
+        
         
         #pause music when computer win
         pygame.mixer.music.pause()
@@ -437,19 +450,29 @@ while running:
         screen.blit(winstreak_text, (70, 200))
         pygame.display.flip()
         
-        pygame.time.wait(3500)
+        
+        
+        if is_gameover_timer_first_time == False:
 
-        #change state to menu
-        state = 'menu'
+            #change state to menu
+            state = 'menu'
+            #increase winstreak by 1
+            current_winstreak = current_winstreak + 1
+            winstreak_text = winstreak_font.render('Winstreak = ' + str(current_winstreak), True, (241, 242, 238))
 
-        #unpause music when going to menu
-        pygame.mixer.music.unpause()
+            #unpause music when going to menu
+            pygame.mixer.music.unpause()
 
         
 
 
     elif state == 'computer_won':
-        
+        for event in pygame.event.get():
+            #to quit the game when use clicks close button
+            if event.type == pygame.QUIT:
+                running = False
+            if event.type == pygame.USEREVENT:
+                is_gameover_timer_first_time = False
         #reset winstreak
         current_winstreak = 0
         winstreak_text = winstreak_font.render('Winstreak = ' + str(current_winstreak), True, (241, 242, 238))
@@ -467,11 +490,13 @@ while running:
         pygame.display.flip()
         pygame.time.wait(4000)
 
-        #change state to menu
-        state = 'menu'
+        if is_gameover_timer_first_time == False:
 
-        #unpause music when going to menu
-        pygame.mixer.music.unpause()
+            #change state to menu
+            state = 'menu'
+
+            #unpause music when going to menu
+            pygame.mixer.music.unpause()
         
 
 
