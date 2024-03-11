@@ -133,15 +133,13 @@ o8 = o_image.get_rect()
 
 #generating symbol for player
 
-"""
+
 player = random.randint(1, 2)
 if player == o:
     computer = x
 if player == x:
     computer = o
-"""
-player = o
-computer = x
+
 
 
 did_computer_play = False
@@ -333,7 +331,7 @@ while running:
             elif n_moves_played == 9: #TO CHECK DRAW
                 state = 'menu'
             
-            if n_moves_played < 9:
+            if (n_moves_played < 9) and (did_anyone_win() == 0):
 
                 waiting = True
                 while waiting:
