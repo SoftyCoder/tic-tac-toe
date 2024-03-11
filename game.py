@@ -131,14 +131,14 @@ o8 = o_image.get_rect()
 
 
 #generating symbol for player
-
-
 player = random.randint(1, 2)
 if player == o:
     computer = x
 if player == x:
     computer = o
 
+
+did_generate_random = False
 
 did_computer_play = False
 did_player_play = True
@@ -227,7 +227,7 @@ while running:
                 if event.type == pygame.MOUSEBUTTONUP:
                     # waits for 200ms and changes state to actual game
                     pygame.mixer.Sound.play(start_sound)
-                    pygame.time.wait(500)
+                    pygame.time.wait(700)
                     state = 'game'
         
                 
@@ -342,7 +342,8 @@ while running:
                 elif grid[i] == x:
                     screen.blit(x_image, vars()['x' + str(i)])
                 elif grid[i] == o:
-                    screen.blit(o_image, vars()['o' + str(i)])    
+                    screen.blit(o_image, vars()['o' + str(i)])
+            
             pygame.display.update()
             pygame.time.wait(200)
             #clicking empty to register clicks + randomly generating move
@@ -396,25 +397,7 @@ while running:
             elif n_moves_played == 9: #TO CHECK DRAW
                 state = 'menu'                       
 
-            """
-            #generate a random move
-            if did_game_end == False:
-                while (did_computer_play == False) and (did_player_play == True):
-                    rand = random.randint(0, 8)
-                    if grid[rand] == empty:
-                        grid[rand] = computer
-                        n_moves_played += 1
-                        
-                        pygame.time.wait(200)
-                        did_computer_play = True
-                        did_player_play = False
-                        pygame.display.flip()
-                        if n_moves_played == 9:
-                            did_game_end = True
-                        break
-            """
             
-            #screen.blit(player_o_bg, player_o_bg_rect)
 
     elif state == 'player_won':
         
@@ -439,6 +422,13 @@ while running:
 
         #unpause music when going to menu
         pygame.mixer.music.unpause()
+
+        #generating symbol for player
+        player = random.randint(1, 2)
+        if player == o:
+            computer = x
+        if player == x:
+            computer = o
 
 
     elif state == 'computer_won':
@@ -465,7 +455,12 @@ while running:
 
         #unpause music when going to menu
         pygame.mixer.music.unpause()
-            
+        #generating symbol for player
+        player = random.randint(1, 2)
+        if player == o:
+            computer = x
+        if player == x:
+            computer = o
 
 
 
