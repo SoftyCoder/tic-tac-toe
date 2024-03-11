@@ -41,7 +41,7 @@ computer_win_sound = pygame.mixer.Sound('assets/computer_win.wav')
 
 pygame.mixer.music.load('assets/music_peach.mp3')
 pygame.mixer.music.play(-1)
-
+pygame.mixer.music.set_volume(0)
 
 #loading menu bg image
 bg_menu = pygame.image.load('assets/bg_menu.png')
@@ -133,14 +133,15 @@ o8 = o_image.get_rect()
 
 #generating symbol for player
 
-
+"""
 player = random.randint(1, 2)
 if player == o:
     computer = x
 if player == x:
     computer = o
-
-
+"""
+player = x
+computer = o
 
 did_computer_play = False
 did_player_play = True
@@ -246,7 +247,7 @@ while running:
         
         #render game bg image (with grid)
         screen.blit(bg_game, bg_game_rect)
-        #render winstreak
+        #render winstreaks
         screen.blit(winstreak_text, (70, 200))
         
         for event in pygame.event.get():
@@ -290,15 +291,38 @@ while running:
                             pygame.time.wait(200)
                             if n_moves_played == 9:
                                 break
-                            #generate a random move
-                            while True:
-                                rand = random.randint(0, 8)
-                                if grid[rand] == empty:
-                                    grid[rand] = computer
-                                    n_moves_played += 1
-                                    
-                                    break
+                            #rendering symbols:
+                            for i in range(9):
+                                if grid[i] == empty:
+                                    screen.blit(empty_image, vars()['empty' + str(i)])
+                                elif grid[i] == x:
+                                    screen.blit(x_image, vars()['x' + str(i)])
+                                elif grid[i] == o:
+                                    screen.blit(o_image, vars()['o' + str(i)])    
+                            pygame.display.update()
+                            pygame.time.wait(200)
+                            
+                            
+                            if (n_moves_played < 9) and (did_anyone_win() == 0):
 
+                                #generate a random move
+                                while True:
+                                    rand = random.randint(0, 8)
+                                    if grid[rand] == empty:
+                                        grid[rand] = computer
+                                        n_moves_played += 1
+                                        
+                                        break
+                            #rendering symbols:
+                            for i in range(9):
+                                if grid[i] == empty:
+                                    screen.blit(empty_image, vars()['empty' + str(i)])
+                                elif grid[i] == x:
+                                    screen.blit(x_image, vars()['x' + str(i)])
+                                elif grid[i] == o:
+                                    screen.blit(o_image, vars()['o' + str(i)])    
+                            pygame.display.update()
+                            pygame.time.wait(200)
         elif player == o:
             
             
