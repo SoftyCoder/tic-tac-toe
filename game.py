@@ -302,15 +302,7 @@ while running:
                                     break
 
         elif player == o:
-            #clicking empty to register clicks + randomly generating move
-            if did_anyone_win() == player:
-                state = 'player_won'
-                pygame.mixer.Sound.play(player_win_sound)
-            elif did_anyone_win() == computer:
-                state = 'computer_won'
-                pygame.mixer.Sound.play(computer_win_sound)
-            elif n_moves_played == 9: #TO CHECK DRAW
-                state = 'menu'
+            
             
             #generate a random move:
             waiting = True
@@ -329,7 +321,18 @@ while running:
                     screen.blit(x_image, vars()['x' + str(i)])
                 elif grid[i] == o:
                     screen.blit(o_image, vars()['o' + str(i)])    
-
+            pygame.display.update()
+            pygame.time.wait(200)
+            #clicking empty to register clicks + randomly generating move
+            if did_anyone_win() == player:
+                state = 'player_won'
+                pygame.mixer.Sound.play(player_win_sound)
+            elif did_anyone_win() == computer:
+                state = 'computer_won'
+                pygame.mixer.Sound.play(computer_win_sound)
+            elif n_moves_played == 9: #TO CHECK DRAW
+                state = 'menu'
+            
             if n_moves_played < 9:
 
                 waiting = True
@@ -356,6 +359,8 @@ while running:
                                             screen.blit(x_image, vars()['x' + str(i)])
                                         elif grid[i] == o:
                                             screen.blit(o_image, vars()['o' + str(i)])
+                                    pygame.display.update()
+                                    pygame.time.wait(200)
                     if waiting == False:
                         break
             
