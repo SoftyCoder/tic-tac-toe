@@ -41,7 +41,6 @@ computer_win_sound = pygame.mixer.Sound('assets/computer_win.wav')
 
 pygame.mixer.music.load('assets/music_peach.mp3')
 pygame.mixer.music.play(-1)
-pygame.mixer.music.set_volume(0)
 
 #loading menu bg image
 bg_menu = pygame.image.load('assets/bg_menu.png')
@@ -133,15 +132,13 @@ o8 = o_image.get_rect()
 
 #generating symbol for player
 
-"""
+
 player = random.randint(1, 2)
 if player == o:
     computer = x
 if player == x:
     computer = o
-"""
-player = x
-computer = o
+
 
 did_computer_play = False
 did_player_play = True
