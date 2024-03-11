@@ -29,7 +29,7 @@ screencolor = 108, 105, 141
 state = 'menu'
 
 #FONTS:
-winstreak_font = pygame.font.Font('assets/comic/ttf')
+winstreak_font = pygame.font.Font('assets/comic.ttf', 42)
 
 
 
@@ -133,13 +133,15 @@ o8 = o_image.get_rect()
 
 #generating symbol for player
 
-
+"""
 player = random.randint(1, 2)
 if player == o:
     computer = x
 if player == x:
     computer = o
-
+"""
+player = o
+computer = x
 
 
 did_computer_play = False
@@ -185,12 +187,13 @@ def did_anyone_win():
 
 
 
-
+#winstreak counter
+current_winstreak = 0
 
 while running:
     
     
-
+    winstreak_text = winstreak_font.render('Winstreak = ' + str(current_winstreak), True, (241, 242, 238))
     # fill the screen with a color
     screen.fill(screencolor)
 
@@ -199,12 +202,16 @@ while running:
 
     #WHEN STATE IS MAIN MENU
     if state == 'menu':
+        blah = True
         n_moves_played = 0
         grid  = [empty, empty, empty, 
                 empty, empty, empty, 
                 empty, empty, empty]
         #render menu bg image
         screen.blit(bg_menu, bg_menu_rect)
+
+        #render winstreak
+        screen.blit(winstreak_text, (70, 200))
 
         #render play button
         screen.blit(play_button, play_button_rect)
@@ -225,6 +232,7 @@ while running:
                     pygame.mixer.Sound.play(start_sound)
                     pygame.time.wait(200)
                     state = 'game'
+        
                 
 
 
@@ -240,6 +248,8 @@ while running:
         
         #render game bg image (with grid)
         screen.blit(bg_game, bg_game_rect)
+        #render winstreak
+        screen.blit(winstreak_text, (70, 200))
         
         for event in pygame.event.get():
             #to quit the game when use clicks close button
@@ -255,6 +265,7 @@ while running:
                 screen.blit(x_image, vars()['x' + str(i)])
             elif grid[i] == o:
                 screen.blit(o_image, vars()['o' + str(i)])
+        pygame.display.update()
         
 
         if player == x:
@@ -291,7 +302,73 @@ while running:
                                     break
 
         elif player == o:
+            #clicking empty to register clicks + randomly generating move
+            if did_anyone_win() == player:
+                state = 'player_won'
+                pygame.mixer.Sound.play(player_win_sound)
+            elif did_anyone_win() == computer:
+                state = 'computer_won'
+                pygame.mixer.Sound.play(computer_win_sound)
+            elif n_moves_played == 9: #TO CHECK DRAW
+                state = 'menu'
             
+            #generate a random move:
+            waiting = True
+            while waiting:
+                rand = random.randint(0, 8)
+
+                if grid[rand] == empty:
+                    grid[rand] = computer
+                    n_moves_played += 1
+                    break
+            #rendering symbols:
+            for i in range(9):
+                if grid[i] == empty:
+                    screen.blit(empty_image, vars()['empty' + str(i)])
+                elif grid[i] == x:
+                    screen.blit(x_image, vars()['x' + str(i)])
+                elif grid[i] == o:
+                    screen.blit(o_image, vars()['o' + str(i)])    
+
+            if n_moves_played < 9:
+
+                waiting = True
+                while waiting:
+                    for event in pygame.event.get():
+                        #to quit the game when use clicks close button
+                        if event.type == pygame.QUIT:
+                            pygame.quit()
+                    for i in range(9):
+                        if vars()['empty' + str(i)].collidepoint(pygame.mouse.get_pos()):
+                            if event.type == pygame.MOUSEBUTTONUP:
+                                if grid[i] == empty:
+                                    # waits for 200ms and register click
+                                    pygame.mixer.Sound.play(click_sound)
+                                    grid[i] = player
+                                    n_moves_played += 1
+                                    pygame.time.wait(200)
+                                    waiting = False
+                                    #rendering symbols:
+                                    for i in range(9):
+                                        if grid[i] == empty:
+                                            screen.blit(empty_image, vars()['empty' + str(i)])
+                                        elif grid[i] == x:
+                                            screen.blit(x_image, vars()['x' + str(i)])
+                                        elif grid[i] == o:
+                                            screen.blit(o_image, vars()['o' + str(i)])
+                    if waiting == False:
+                        break
+            
+            #clicking empty to register clicks + randomly generating move
+            if did_anyone_win() == player:
+                state = 'player_won'
+                pygame.mixer.Sound.play(player_win_sound)
+            elif did_anyone_win() == computer:
+                state = 'computer_won'
+                pygame.mixer.Sound.play(computer_win_sound)
+            elif n_moves_played == 9: #TO CHECK DRAW
+                state = 'menu'                       
+
             """
             #generate a random move
             if did_game_end == False:
@@ -310,16 +387,24 @@ while running:
                         break
             """
             
-            screen.blit(player_o_bg, player_o_bg_rect)
+            #screen.blit(player_o_bg, player_o_bg_rect)
 
     elif state == 'player_won':
+        
+        #increase winstreak by 1
+        current_winstreak = current_winstreak + 1
+        winstreak_text = winstreak_font.render('Winstreak = ' + str(current_winstreak), True, (241, 242, 238))
+        
         #pause music when computer win
         pygame.mixer.music.pause()
 
         #display player won screen
         screen.blit(player_won_bg, player_won_bg_rect)
         player_won_bg_rect.x, player_won_bg_rect.y = 0, 0
+        #render winstreak
+        screen.blit(winstreak_text, (70, 200))
         pygame.display.flip()
+        
         pygame.time.wait(3500)
 
         #change state to menu
@@ -330,12 +415,21 @@ while running:
 
 
     elif state == 'computer_won':
+        
+        #reset winstreak
+        current_winstreak = 0
+        winstreak_text = winstreak_font.render('Winstreak = ' + str(current_winstreak), True, (241, 242, 238))
+
+
+        
         #pause music when computer win
         pygame.mixer.music.pause()
 
         #display computer won screen
         screen.blit(computer_won_bg, computer_won_bg_rect)
         computer_won_bg_rect.x, computer_won_bg_rect.y = 0, 0
+        #render winstreak
+        screen.blit(winstreak_text, (70, 200))
         pygame.display.flip()
         pygame.time.wait(4000)
 
